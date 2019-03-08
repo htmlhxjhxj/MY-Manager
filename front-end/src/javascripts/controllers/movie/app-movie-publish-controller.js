@@ -8,6 +8,16 @@ import { postMovieItem } from '@models/movie-model'
 let img = '' // 准备上传的图片的路径
 let editor = null
 const render = (req, res, next) => {
+
+    // 判断是否有权限发布
+    if ( localStorage.rank > 2 ) {
+        $.Toast('Warning', '无权限发布', 'warning')
+        setTimeout(() => {
+            angel.emit('go', '/movie/items')
+        }, 1000)
+        return false;
+    }
+
     res.render(appMoviePublish)
     // 初始化日历插件
     $('#datepicker').date_input()
@@ -46,7 +56,11 @@ function bindEvents () {
             title, description, star, showTime, img
         })
         // 发布成功后回到列表
+        console.log(data,11)
         if ( data ) {
+            angel.emit('go', '/movie/items')
+        } else {
+            $.Toast('Warning', '没有权限操作', 'warning')
             angel.emit('go', '/movie/items')
         }
     })

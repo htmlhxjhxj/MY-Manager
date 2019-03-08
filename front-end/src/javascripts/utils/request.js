@@ -3,6 +3,13 @@
 
 const request = (options) => {
     return new Promise((resolve, reject) => {
+        // 自动携带token
+        if ( !options.data ) {
+            options.data = { token: localStorage.token }
+        } else {
+            options.data.token = localStorage.token
+        }
+        
         $.ajax({
             ...options,
             success: (res) =>  {
@@ -20,7 +27,7 @@ const request = (options) => {
                 } else {
                     // 除请求失败处理
                     $.Toast('Warning', '数据请求失败', 'warning')
-                    console.log('fail')
+                    resolve(null)
                 }
             },
             error (error) {

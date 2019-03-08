@@ -1,8 +1,11 @@
 import request from '@utils/request'
-
+// 验证是否登录
 const userLoginAuth = () => {
     return $.ajax({
-        url: '/api/v1/users/auth'
+        url: '/api/v1/users/auth',
+        data: {
+            token: localStorage.token
+        }
     })
 }
 
@@ -12,14 +15,9 @@ const getUserInfo = () => {
     })
 }
 
-const exit = () => {
-    return request({
-        url: '/api/v1/users/exit'
-    })
-}
+
 
 export {
     userLoginAuth,
-    getUserInfo,
-    exit
+    getUserInfo
 }

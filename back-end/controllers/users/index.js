@@ -1,5 +1,6 @@
 const usersModel = require('../../models/users')
 const fs = require('fs')
+const jwt = require('jsonwebtoken')
 const { Encrypt, Decrypt } = require('../../modules/crypto')
 
 const register = async (req, res, next) => {
@@ -46,36 +47,32 @@ const login = async (req, res, next) => {
         next('unreal password')
         return false;
     }
-    // 登录成功，存入session
-    req.session.user = {
+    // 存储 token   返回给前端
+    let token = jwt.sign({
         uid: usernameExist[0]._id,
         username: usernameExist[0].username,
+        rank: usernameExist[0].rank
+    }, 'i love u')
+    res.responseData = { 
+        token: Encrypt(token),
+        rank: usernameExist[0].rank
     }
     next('success')
 }
 // 登录验证
-const auth = (req, res, next) => {
-    if ( req.session.user ) {
-        next('success')
-        return false
-    }
-    next('error')
+const auth = (tokenInfo, req, res, next) => {
+    next('success')
 }
 
 // 获取用户信息
-const info = async (req, res, next) => {
-    if ( req.session.user ) {
-        let usernameExist = await usersModel.checkAlready({ 
-            username: req.session.user.username 
-        })
-        let item = Object.assign({}, usernameExist[0]._doc)
-        delete item.password
-        res.responseData = item
-        next('success')
-    } else {
-        next('not login')
-    }
-    
+const info = async (tokenInfo, req, res, next) => {
+    let usernameExist = await usersModel.checkAlready({ 
+        _id: tokenInfo.uid
+    })
+    let item = Object.assign({}, usernameExist[0]._doc)
+    delete item.password
+    res.responseData = item
+    next('success') 
 }
 
 

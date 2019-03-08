@@ -82,6 +82,8 @@
             }
         }).done(function(res) {
             if ( res.code === 200 ) {
+                localStorage.token = res.data.token // 存入token
+                localStorage.rank = res.data.rank // 存入token
                 window.location.href = '/'
             } else {
                 getCode() // 如果登录失败更改验证码

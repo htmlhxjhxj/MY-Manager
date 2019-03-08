@@ -1,5 +1,5 @@
 import angel from '@utils/angel'
-import { getUserInfo, exit } from '@models'
+import { getUserInfo } from '@models'
 import appHeader from '@views/layout/app-header.html'
 import appNav from '@views/layout/app-nav.html'
 import appContent from '@views/layout/app-content.html'
@@ -22,8 +22,8 @@ const render = async () => {
         info: data
     })) // 放入头部
     $('.exit-btn').click(async function () {
-        // 后端删掉session，清除内存占用
-        await exit()
+        // 前端自己删除token，清除内存占用
+        localStorage.removeItem('token')
         window.location.href = '/admin.html'
         // 前端跳转到登录
     })

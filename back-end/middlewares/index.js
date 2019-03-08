@@ -2,6 +2,7 @@ const status = require('../modules/status')
 const multer = require('multer')
 const path = require('path')
 const svgCaptcha = require('svg-captcha')
+const jwt = require('jsonwebtoken')
 const { Encrypt, Decrypt } = require('../modules/crypto')
 // 处理响应的数据格式的
 const jsonFormat = (req, res, next) => {
@@ -84,9 +85,43 @@ const uploadImage = (req, res, next) => {
     
 }
 
+// token验证是否登录中间件
+const authLogin = (req, res, next) => {
+    
+    let token = req.method === 'GET' ? req.query.token : req.body.token
+    if ( !token ) {
+        res.render('default', {  
+            data: JSON.stringify({}), 
+            status: status['not login']
+        })
+        return false
+    }
+    try {
+        token = Decrypt(token)
+        let tokenInfo = jwt.verify(token, 'i love u')
+        let now = Date.now() / 1000
+        let expires = 60 * 60 * 2 // 2个小时过期时间
+        if ( now - tokenInfo.iat > expires ) {
+            res.render('default', {  
+                data: JSON.stringify({}), 
+                status: status['not login']
+            })
+            return false;
+        }
+        next(tokenInfo)
+    } catch (e) {
+        res.render('default', {  
+            data: JSON.stringify({}), 
+            status: status['not login']
+        })
+    }
+}
+
+
 module.exports = {
     jsonFormat,
     response,
     uploadImage,
-    getCode
+    getCode,
+    authLogin
 }

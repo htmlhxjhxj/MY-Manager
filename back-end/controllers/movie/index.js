@@ -35,9 +35,13 @@ const getMovieItem = async (req, res, next) => {
 }
 
 // 发布新电影
-const postMovieItem = async (req, res, next) => {
+const postMovieItem = async (tokenInfo, req, res, next) => {
+    if ( tokenInfo.rank > 2 ) { // 验证是否可以发布
+        next('error')
+        return false
+    }
     // title, star, description, showTime
-    let { title, star, description, showTime, img } = req.body
+    let { title, star, description, showTime, img, } = req.body
     // 是否有参数缺失
     if ( title && star && description && showTime ) {
         try {
@@ -58,7 +62,11 @@ const postMovieItem = async (req, res, next) => {
     
 }
 // 删除
-const deleteMovieItem = async (req, res, next) => {
+const deleteMovieItem = async (tokenInfo, req, res, next) => {
+    if ( tokenInfo.rank > 2 ) { // 验证是否可以更新
+        next('error')
+        return false
+    }
     let { id } = req.body
     try {
         await movieModel.deleteMovieItem(id)
@@ -69,7 +77,11 @@ const deleteMovieItem = async (req, res, next) => {
 }
 
 // 更新新电影
-const updateMovieItem = async (req, res, next) => {
+const updateMovieItem = async (tokenInfo, req, res, next) => {
+    if ( tokenInfo.rank > 2 ) { // 验证是否可以更新
+        next('error')
+        return false
+    }
     let { title, star, description, showTime, img, id } = req.body
     if ( title && star && description && showTime ) {
         try {

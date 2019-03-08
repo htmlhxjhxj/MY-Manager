@@ -6,7 +6,8 @@ var userItemSchema = new mongoose.Schema({
     username: String,
     password: String,
     nickname: String,
-    avatar: String
+    avatar: String,
+    rank: Number
 });
 // 单数会自动加s （集合）
 var Users = mongoose.model('users', userItemSchema);
@@ -19,6 +20,7 @@ const checkAlready = (option) => {
 // 注册
 const register = (params) => {
     params.avatar = params.avatar || '/images/users/avatar/default-avatar.jpg'
+    params.rank = 3
     return Users.insertMany(params)
 }
 

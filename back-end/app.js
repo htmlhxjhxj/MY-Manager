@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var session = require('express-session')
+
 var {
   jsonFormat
 } = require('./middlewares')
@@ -17,19 +17,6 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-
-// 使用session
-app.use(session({
-  secret: 'i love u',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { 
-    path: '/', 
-    httpOnly: true, 
-    secure: false, 
-    maxAge: 1000 * 60 * 60 * 2 // 过期时间  ms
-  } // 准备种到前端的cookie的相关配置
-}))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
