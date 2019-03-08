@@ -80,7 +80,7 @@ function uploadImage (inp) {
             $.Toast('Warning', res.msg, 'warning')
             return false;
         }
-        img = 'http://10.60.18.164:3000' + res.data.img
+        img = 'http://10.60.18.150:3000' + res.data.img
         $('.publish-img-box').removeClass('hidden').find('img').attr('src', img)
         $.Toast('Success', '图片上传成功', 'success')
     }).fail((error) => {

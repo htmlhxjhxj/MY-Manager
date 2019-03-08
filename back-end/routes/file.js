@@ -10,7 +10,7 @@ router.post('/description/img', uploadImage, (req, res, next) => {
     res.json({
         'success': true,
         'msg': 'ok',
-        'file_path': 'http://10.60.18.164:3000' + req.body.img
+        'file_path': 'http://10.60.18.150:3000' + req.body.img
     })
 });
 
